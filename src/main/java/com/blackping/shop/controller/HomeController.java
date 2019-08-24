@@ -29,7 +29,7 @@ public class HomeController {
 //		Logger.Path("C:\\Users\\Admin\\Desktop\\java study\\workspace\\blog\\src\\main\\upload\\log/");
 		
 		// 리눅스 Path
-		Logger.Path("../upload/log/");
+		Logger.Path("/root/tomcat/webapps/upload/log/");
 	}
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
