@@ -10,6 +10,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.blackping.shop.util.Log;
+import com.blackping.shop.util.staticClass;
 
 /**
  * Handles requests for the application home page.
@@ -17,25 +18,10 @@ import com.blackping.shop.util.Log;
 @Controller
 public class HomeController {
 	
-	public static String ip() {
-		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
-		String ip = request.getHeader("X-FORWARDED-FOR");
-		if (ip == null) ip = request.getRemoteAddr();
-		return ip;
-	}
-	static Log Logger = new Log();
-	{
-		// 윈도우 Path
-//		Logger.Path("C:\\Users\\Admin\\Desktop\\java study\\workspace\\blog\\src\\main\\upload\\log/");
-		
-		// 리눅스 Path
-		Logger.Path("/root/tomcat/webapps/upload/log/");
-	}
-	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(HttpServletRequest req, HttpServletRequest res) {
         
-		Logger.info("test " + HomeController.ip());
+		staticClass.Logger.info("test " + staticClass.ip());
 		HttpSession session = req.getSession();
 		session.setAttribute("test", "세션");
 		
