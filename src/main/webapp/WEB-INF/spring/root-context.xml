@@ -7,9 +7,12 @@
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<!-- 빈 객체 -->
+	<!-- Linux p:url="jdbc:mysql://dbserver:49306/blog" -->
+	<!-- Windows p:url="jdbc:mysql://blog.blackping.shop:49306/blog" -->
+	
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"
 		p:driverClassName="org.mariadb.jdbc.Driver"
-		p:url="jdbc:mysql://dbserver:49306/blog"
+		p:url="jdbc:mysql://blog.blackping.shop:49306/blog"
 		p:username="ping"
 		p:password="pingsking" />
 		
