@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+	<script>
+		angular.module('app', [])
+		       .controller('appCTL1', function($scope){
+		    	   $scope.list = [
+		    		   {"name":"가"},{"name":"나"},{"name":"다"}
+		    	   ];
+		    	   $scope.ob = "name";
+		    	   $scope.cbt = function(){
+		    		   if($scope.ob == "-name"){
+		    			   $scope.ob = "name";
+		    		   } else {
+		    			   $scope.ob = "-name";
+		    		   }		    		      
+		    	   }
+				});
+	</script>
+</head>
+<body data-ng-app="app" data-ng-controller="appCTL1">
+<button type="button" data-ng-click="cbt()">정렬</button>
+<ul>
+	<li data-ng-repeat="row in list | orderBy : ob">{{($index + 1) + " " + row.name}}</li>
+</ul>
+
+</body>
+</html>

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class Log {
 //	private String path = "C:\\Users\\Admin\\Desktop\\java study\\blog\\src\\main\\upload\\log/";
-	private String path = "D:\\IDE\\workspace\\blog\\src\\main\\upload\\log/";
+	private String path = "C:\\Users\\GD7\\git\\blog\\src\\main\\upload\\log/";
 //	private String path = "/root/tomcat/webapps/upload/log/";
 	
 	public Log() { }

@@ -42,9 +42,9 @@ public class HomeController {
 		return ip;
 	}
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String home(HttpServletRequest req, HttpServletResponse res, Model model) {
-//		hs.test();
+		hs.test();
 		Logger.info("test " + HomeController.ip());
 		HttpSession session = req.getSession();
 		model.addAttribute("model", "test");
