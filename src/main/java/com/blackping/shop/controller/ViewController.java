@@ -2,15 +2,21 @@ package com.blackping.shop.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.blackping.shop.bean.LoginBean;
 import com.blackping.shop.dao.DAOInterface;
 
 import net.sf.json.JSONObject;
@@ -36,15 +42,65 @@ public class ViewController {
 	}
 	
 	@RequestMapping(value="/login", method= RequestMethod.POST)
-	public void login() {
-		System.out.println("test");
+	public void login(@Valid LoginBean lb, BindingResult bindingResult, HttpServletResponse res) {
+		List<ObjectError> errors = bindingResult.getAllErrors();
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		HashMap<String, Object> bufferMap = new HashMap<String, Object>();
+		if(errors.size() > 0) {
+			for(ObjectError error : errors) {
+				Object[] err = error.getArguments();
+				for(int i = 0; i < err.length; i++) {
+					MessageSourceResolvable ms = (MessageSourceResolvable) err[i];
+					if("NotNull".equals(error.getCode())) {
+						bufferMap.put(ms.getDefaultMessage(), ms.getDefaultMessage() + " input is null");
+						resultMap.put("errors", bufferMap);
+						resultMap.put("error_code", 101);
+						resultMap.put("state", false);
+						bufferMap.clear();
+					}
+				}
+			}
+		} else {
+			HashMap<String, Object> paramMap = new HashMap<String, Object>();
+			paramMap.put("type", "selectOne");
+			paramMap.put("sql", "SELECT COUNT(*) as cnt FROM user WHERE DELYN = 'N' and id = '" + lb.getId() + "'");
+			paramMap = di.sql(paramMap);
+			
+			HashMap<String, Object> getMap = new HashMap<String, Object>();
+			getMap = (HashMap<String, Object>) paramMap.get("result");
+			boolean check = (Integer.parseInt(getMap.get("cnt").toString()) == 1);
+			
+			if(!check) {
+				bufferMap.put("id", "no " + lb.getId() +"");
+				resultMap.put("state", false);
+				resultMap.put("errors", bufferMap);
+				resultMap.put("error_code", 102);
+				bufferMap.clear();
+			} else {
+				paramMap.put("type", "selectOne");
+				paramMap.put("sql", "SELECT COUNT(*) as cnt FROM user WHERE DELYN = 'N' and id = '" + lb.getId() + "' and pw = '" + lb.getPw() + "'");
+				paramMap = di.sql(paramMap);
+				
+				getMap = (HashMap<String, Object>) paramMap.get("result");
+				check = (Integer.parseInt(getMap.get("cnt").toString()) == 1);
+				if(!check) {
+					
+				}
+			}
+		}
+		
+		try {
+			res.setContentType("application/json; charset=UTF-8");
+			res.getWriter().write(JSONObject.fromObject(resultMap).toString());
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@RequestMapping(value="/select", method= RequestMethod.POST)
 	public void select(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		HashMap<String, Object> paramMap = new HashMap<String, Object>();
 		
-		System.out.println(req.getParameter("key"));
 		paramMap.put("type", "select");
 		paramMap.put("sql", "SELECT NO, TXT FROM notice WHERE DELYN = 'N'");
 		
@@ -57,7 +113,6 @@ public class ViewController {
 	
 	@RequestMapping(value="/insert", method= RequestMethod.POST)
 	public void insert(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		System.out.println(req.getParameter("NO"));
 		System.out.println(req.getParameter("TXT"));
 		HashMap<String, Object> paramMap = new HashMap<String, Object>();
 		

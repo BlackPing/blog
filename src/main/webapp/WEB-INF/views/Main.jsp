@@ -22,11 +22,11 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 <script type="text/javascript">
-	var checkIndex = -1;
+	let checkIndex = -1;
 
 	var app = angular.module('app', []);
-	app.controller('appCLT', ($rootScope, $scope, $http)=> {
-		$rootScope.comment = () => {
+	app.controller('appctl', ($scope, $http)=> {
+		$scope.comment = () => {
 			$http({
 				method: 'POST',
 				url: '/select',
@@ -35,49 +35,45 @@
 			});
 		}
 
-		$scope.checked = (index) => {
-			var ck = document.getElementsByName('checkbox');
-			for(var i = 0; i < ck.length; i++) {
-				ck[i].checked = false;
-			}
-			
-			if(index != checkIndex) {
-				ck[index].checked = true;
-				var txt = document.getElementsByTagName("tr")[index + 1].getElementsByTagName("td")[2].textContent;
-				document.getElementById("text").value = txt;
-				document.getElementsByName("no")[0].value = document.getElementsByTagName("tr")[index + 1].getElementsByTagName("td")[1].textContent;
-				document.getElementById("update").classList.remove("disabled");
-				document.getElementById("delete").classList.remove("disabled");
+		$scope.checked = (item) => {
+			var update = angular.element(document.querySelector('#update'));
+			var del = angular.element(document.querySelector('#delete'));
+			if(item.checked) {
+				checkIndex = item.NO;
+				$scope.text = item.TXT;
+				update.removeClass('disabled');
+				del.removeClass('disabled');
 			} else {
-				document.getElementById("text").value = "";
-				document.getElementsByName("no")[0].value = "";
-				document.getElementById("update").classList.add("disabled");
-				document.getElementById("delete").classList.add("disabled");
+				checkIndex = -1;
+				$scope.text = "";
+				update.addClass('disabled');
+				del.addClass('disabled');
 			}
-			
-			if(ck[index].checked) checkIndex = index;
-			else checkIndex = -1;
+			angular.forEach($scope.data, (data) => {
+				if(data.NO != item.NO) {
+					if(data.checked) data.checked = false;
+				}
+			});
 		}
-
-		$rootScope.comment();
-	});
-	
-	app.controller('appCRUD', ($rootScope, $scope, $http)=> {
+		
 		$scope.crud = (url) => {
 			$http({
 				"method": 'POST',
 				"url": url,
-				"params" : {NO: document.getElementsByName("no")[0].value, TXT: document.getElementById("text").value},
+				"params" : {NO: checkIndex, TXT: $scope.text},
 			})
 			.then((response) => {
-				$rootScope.comment();
+				$scope.text = "";
+				$scope.comment();
 			});
 		}
+		
+		$scope.comment();
 	});
 	
 </script>
 </head>
-<body data-ng-app="app">
+<body data-ng-app="app" data-ng-controller="appctl">
 <div class="container">
 	<h3>웹 문제</h3>
 	<p>
@@ -90,7 +86,7 @@
 		참조 : 체크박스 이벤트는 위에 있는 script의 이벤트를 같이 이용하여 처리 할것.
 	</p>
 </div>
-<div class="container" data-ng-controller="appCRUD">
+<div class="container">
 	<h1 class="text-center">구디아카데미</h1>
 	<form id="edit">
 	  <div class="form-group row">
@@ -98,8 +94,7 @@
 	    	<label for="text">한줄평  :</label>
 	    </div>
 	    <div class="col-xs-7">
-	    	<input type="text" class="form-control" id="text" name="text" placeholder="입력하세요." autocomplete="off">
-	    	<input type="hidden" name="no">
+	    	<input type="text" class="form-control" id="text" name="text" placeholder="입력하세요." autocomplete="off" value="{{text}}" data-ng-model="text">
 	    </div>
 	    <div class="col-xs-1">
 	    	<button type="button" class="btn btn-primary" id="insert" data-ng-click="crud('/insert')">추가</button>
@@ -113,7 +108,7 @@
 	  </div>
 	</form>
 </div>
-<div class="container" data-ng-controller="appCLT">
+<div class="container">
 	<table class="table table-striped">
 	  <thead>
 	    <tr>
@@ -124,7 +119,7 @@
 	  </thead>
 	  <tbody>
 		<tr data-ng-repeat="row in data">
-			<td><input type="checkbox" name="checkbox" data-ng-click="checked($index)"> </td>
+			<td><input type="checkbox" name="checkbox" data-ng-model="row.checked" data-ng-click="checked(row)"> </td>
 			<td>{{ row.NO }}</td>
 			<td>{{ row.TXT }}</td>
 		</tr>
