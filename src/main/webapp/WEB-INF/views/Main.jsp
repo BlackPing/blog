@@ -30,12 +30,8 @@
 			$http({
 				method: 'POST',
 				url: '/select',
-				data: $.param({
-			        key: 'test'
-			    })
 			}).then((response) => {
 				$scope.data = response.data.result;
-				console.log($scope.data);
 			});
 		}
 
@@ -49,7 +45,7 @@
 				ck[index].checked = true;
 				var txt = document.getElementsByTagName("tr")[index + 1].getElementsByTagName("td")[2].textContent;
 				document.getElementById("text").value = txt;
-				document.getElementsByName("no")[0].value = index + 1;
+				document.getElementsByName("no")[0].value = document.getElementsByTagName("tr")[index + 1].getElementsByTagName("td")[1].textContent;
 				document.getElementById("update").classList.remove("disabled");
 				document.getElementById("delete").classList.remove("disabled");
 			} else {
@@ -67,11 +63,11 @@
 	});
 	
 	app.controller('appCRUD', ($rootScope, $scope, $http)=> {
-		$scope.insert = () => {
+		$scope.crud = (url) => {
 			$http({
-				method: 'POST',
-				url: '/insert',
-				params : {NO: document.getElementsByName("no")[0].value, TXT: document.getElementById("text").value},
+				"method": 'POST',
+				"url": url,
+				"params" : {NO: document.getElementsByName("no")[0].value, TXT: document.getElementById("text").value},
 			})
 			.then((response) => {
 				$rootScope.comment();
@@ -106,13 +102,13 @@
 	    	<input type="hidden" name="no">
 	    </div>
 	    <div class="col-xs-1">
-	    	<button type="submit" class="btn btn-primary" id="submit" data-ng-click="insert()">추가</button>
+	    	<button type="button" class="btn btn-primary" id="insert" data-ng-click="crud('/insert')">추가</button>
 	    </div>
 	    <div class="col-xs-1">
-	    	<button type="button" class="btn btn-success disabled" id="update">수정</button>
+	    	<button type="button" class="btn btn-success disabled" id="update" data-ng-click="crud('/update')">수정</button>
 	    </div>
 	    <div class="col-xs-1">
-	    	<button type="button" class="btn btn-danger disabled" id="delete">삭제</button>
+	    	<button type="button" class="btn btn-danger disabled" id="delete" data-ng-click="crud('/delete')">삭제</button>
 	    </div>
 	  </div>
 	</form>

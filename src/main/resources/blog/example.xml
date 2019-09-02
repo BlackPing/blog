@@ -9,4 +9,7 @@
   <insert id="insert" parameterType="hashmap">
     ${sql}
   </insert>
+  <insert id="update" parameterType="hashmap">
+    ${sql}
+  </insert>
 </mapper>

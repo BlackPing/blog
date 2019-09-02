@@ -1,0 +1,43 @@
+* { margin: 0px; padding: 0px; }
+.none { display: none; }
+
+.button-green { background: rgb(28, 184, 65); }
+
+.font-S { font-size: 16px }
+.font-M { font-size: 22px }
+.font-L { font-size: 32px }
+
+.contain { width: 300px; height: 250px; margin: 250px 0; }
+.position { position:absolute; margin-left: calc(50% - 150px); }
+
+form { width: 300px; height: 250px; box-sizing: border-box; z-index: 1; }
+
+.card { width: 300px;height: 125px; background-color: rgb(50, 50, 50); }
+.card-top { transform: translateY(0px); transition: 0.3s; border-top-left-radius: 10px; border-top-right-radius: 10px; z-index: 3; }
+.card-bottom { transform: translateY(0px); transition: 0.3s; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; margin-top: 125px; z-index: 2; }
+.card h1 { padding-top: 40px; text-align: center; color: white; font-size: 2rem; }
+.card:hover { cursor: pointer; }
+
+#box_check:checked~.card-top { background-color: rgba(252, 31, 68, 0.8); transform: translateY(-125px); transition: 0.3s; }
+
+#box_check:checked~.card-bottom { transform: translateY(125px); transition: 0.3s; }
+
+#box_check:checked~form { border-left: 1px solid rgb(150, 150, 150); border-right: 1px solid rgb(150, 150, 150); box-sizing: border-box; }
+
+form p { margin-left: 25px; font-family: 'Mukta', sans-serif; }
+
+.button {
+    appearance: none;
+    margin-left: 25px;
+    margin-top: 10px;
+    width: 250px;
+    height: 32px;
+    font-family: 'Mukta', sans-serif;
+    border: 0px;
+    border-radius: 5px;
+    outline: 0;
+    color:white;
+}
+.button:hover { cursor: pointer; }
+
+.input { margin-left: 25px; appearance: none; width: 250px; height: 32px; box-sizing: border-box; }

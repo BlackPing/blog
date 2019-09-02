@@ -37,9 +37,15 @@ public class DAO implements DAOInterface {
 			break;
 			
 		case "insert":
-			resultMap.put("result", session.insert("example.select", paramMap));
+			resultMap.put("result", session.insert("example.insert", paramMap));
+			break;
+			
+		case "update":
+		case "delete":
+			resultMap.put("result", session.update("example.update", paramMap));
 			break;
 		}
+		
 		return resultMap;
 	}
 }
