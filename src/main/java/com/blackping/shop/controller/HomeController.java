@@ -49,8 +49,11 @@ public class HomeController {
 		HttpSession session = req.getSession();
 		model.addAttribute("model", "test");
 		session.setAttribute("test", "세션");
-		
 		return "template";
 	}
 	
+	@RequestMapping(value="/path", method = RequestMethod.GET)
+	public void pathcheck(HttpServletRequest req, HttpServletResponse res) throws IOException {
+		res.getWriter().write(req.getSession().getServletContext().getRealPath("/"));
+	}
 }

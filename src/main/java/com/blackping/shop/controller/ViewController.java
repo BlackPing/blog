@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class ViewController {
 	}
 	
 	@RequestMapping(value="/login", method= RequestMethod.POST)
-	public void login(@Valid LoginBean lb, BindingResult bindingResult, HttpServletResponse res) {
+	public void login(@Valid LoginBean lb, BindingResult bindingResult, HttpServletResponse res, HttpSession session) {
 		List<ObjectError> errors = bindingResult.getAllErrors();
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		HashMap<String, Object> bufferMap = new HashMap<String, Object>();
@@ -53,44 +54,48 @@ public class ViewController {
 					MessageSourceResolvable ms = (MessageSourceResolvable) err[i];
 					if("NotNull".equals(error.getCode())) {
 						bufferMap.put(ms.getDefaultMessage(), ms.getDefaultMessage() + " input is null");
-						resultMap.put("errors", bufferMap);
+						resultMap.put("errors", bufferMap.clone());
 						resultMap.put("error_code", 101);
 						resultMap.put("state", false);
-						bufferMap.clear();
+//						bufferMap.clear();
 					}
 				}
 			}
 		} else {
 			HashMap<String, Object> paramMap = new HashMap<String, Object>();
+			HashMap<String, Object> getMap = new HashMap<String, Object>();
 			paramMap.put("type", "selectOne");
 			paramMap.put("sql", "SELECT COUNT(*) as cnt FROM user WHERE DELYN = 'N' and id = '" + lb.getId() + "'");
 			paramMap = di.sql(paramMap);
 			
-			HashMap<String, Object> getMap = new HashMap<String, Object>();
 			getMap = (HashMap<String, Object>) paramMap.get("result");
 			boolean check = (Integer.parseInt(getMap.get("cnt").toString()) == 1);
 			
 			if(!check) {
 				bufferMap.put("id", "no " + lb.getId() +"");
 				resultMap.put("state", false);
-				resultMap.put("errors", bufferMap);
+				resultMap.put("errors", bufferMap.clone());
 				resultMap.put("error_code", 102);
-				bufferMap.clear();
+//				bufferMap.clear();
 			} else {
 				paramMap.put("type", "selectOne");
 				paramMap.put("sql", "SELECT COUNT(*) as cnt FROM user WHERE DELYN = 'N' and id = '" + lb.getId() + "' and pw = '" + lb.getPw() + "'");
 				paramMap = di.sql(paramMap);
 				
 				getMap = (HashMap<String, Object>) paramMap.get("result");
+				System.out.println(getMap.toString());
 				check = (Integer.parseInt(getMap.get("cnt").toString()) == 1);
-				if(!check) {
-					
+				System.out.println(check);
+				if(check) {
+					resultMap.put("state", true);
+					session.setAttribute("id", lb.getId());
 				}
 			}
 		}
 		
 		try {
 			res.setContentType("application/json; charset=UTF-8");
+			System.out.println(resultMap.toString());
 			res.getWriter().write(JSONObject.fromObject(resultMap).toString());
 		} catch(IOException e) {
 			e.printStackTrace();
