@@ -32,20 +32,11 @@ public class HomeController {
 	
 	@Autowired
 	HomeService hs;
-	@Autowired
-	Log Logger;
-	
-	public static String ip() {
-		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
-		String ip = request.getHeader("X-FORWARDED-FOR");
-		if (ip == null) ip = request.getRemoteAddr();
-		return ip;
-	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String home(HttpServletRequest req, HttpServletResponse res, Model model) {
 		hs.test();
-		Logger.info("test " + HomeController.ip());
+		Log.logger.info("test " + Log.logger.ip());
 		HttpSession session = req.getSession();
 		model.addAttribute("model", "test");
 		session.setAttribute("test", "세션");

@@ -4,19 +4,16 @@
 <head>
 <meta charset="UTF-8">
 <title>Developer b</title>
-<style>
-	* { margin: 0px; padding: 0px }
-	header { width: 100%; height: 300px; background-color: black }
-	footer { width: 100%; height: 100px; background-color: black }
-	section { width: 100%; }
-	aside { width: 250px; height: 100vh; position: fixed; background-color: black; top: 0; right: 0; }
-</style>
+
+<link rel="stylesheet" type="text/css" href="../res/css/commons.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
 	<header></header>
 	<nav></nav>
 	<section>
 		<article>
+			<input type="text">
 			<h1>test</h1>
 			<h1>test</h1>
 			<h1>test</h1>

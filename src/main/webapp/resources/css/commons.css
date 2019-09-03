@@ -1,0 +1,7 @@
+* { margin: 0px; padding: 0px }
+body > section { all: unset; }
+
+header { all: init; width: 100%; height: 300px; background-color: black }
+footer { all: init; width: 100%; height: 100px; background-color: black }
+section { width: 100%; }
+aside { width: 250px; height: 100vh; position: fixed; background-color: black; top: 0; right: 0; }
