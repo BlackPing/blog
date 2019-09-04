@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -14,6 +15,7 @@ import org.springframework.context.MessageSourceResolvable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -42,8 +44,11 @@ public class ViewController {
 		return "Main";
 	}
 	
+	
+	// error 101: null error
+	// error 102: ip pw error
 	@RequestMapping(value="/login", method= RequestMethod.POST)
-	public void login(@Valid LoginBean lb, BindingResult bindingResult, HttpServletResponse res, HttpSession session) {
+	public void login(@Valid LoginBean lb, BindingResult bindingResult, HttpServletRequest req, HttpServletResponse res, @CookieValue(value="ASID", required=false, defaultValue="") String cookie) {
 		List<ObjectError> errors = bindingResult.getAllErrors();
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		HashMap<String, Object> bufferMap = new HashMap<String, Object>();
@@ -54,13 +59,15 @@ public class ViewController {
 					MessageSourceResolvable ms = (MessageSourceResolvable) err[i];
 					if("NotNull".equals(error.getCode())) {
 						bufferMap.put(ms.getDefaultMessage(), ms.getDefaultMessage() + " input is null");
-						resultMap.put("errors", bufferMap.clone());
-						resultMap.put("error_code", 101);
-						resultMap.put("state", false);
-//						bufferMap.clear();
 					}
 				}
 			}
+			
+			resultMap.put("errors", new HashMap<String, Object>(bufferMap));
+			resultMap.put("error_code", 101);
+			resultMap.put("state", false);
+			bufferMap.clear();
+			System.out.println(resultMap.toString());
 		} else {
 			HashMap<String, Object> paramMap = new HashMap<String, Object>();
 			HashMap<String, Object> getMap = new HashMap<String, Object>();
@@ -72,25 +79,31 @@ public class ViewController {
 			boolean check = (Integer.parseInt(getMap.get("cnt").toString()) == 1);
 			
 			if(!check) {
-				bufferMap.put("id", "no " + lb.getId() +"");
+				bufferMap.put("id", "no " + req.getParameter("id") +"");
 				resultMap.put("state", false);
-				resultMap.put("errors", bufferMap.clone());
+				resultMap.put("errors", new HashMap<String, Object>(bufferMap));
 				resultMap.put("error_code", 102);
-//				bufferMap.clear();
+				bufferMap.clear();
 			} else {
 				paramMap.put("type", "selectOne");
 				paramMap.put("sql", "SELECT COUNT(*) as cnt FROM user WHERE DELYN = 'N' and id = '" + lb.getId() + "' and pw = '" + lb.getPw() + "'");
 				paramMap = di.sql(paramMap);
 				
 				getMap = (HashMap<String, Object>) paramMap.get("result");
-				System.out.println(getMap.toString());
 				check = (Integer.parseInt(getMap.get("cnt").toString()) == 1);
-				System.out.println(check);
-				if(check) {
+				if(!check) {
+					bufferMap.put("pw", "no pw");
+					resultMap.put("state", false);
+					resultMap.put("errors", new HashMap<String, Object>(bufferMap));
+					resultMap.put("error_code", 102);
+					bufferMap.clear();
+				} else {
 					resultMap.put("state", true);
-					session.setAttribute("id", lb.getId());
+					Cookie resultCookie = new Cookie("ASID", "true");
+					res.addCookie(resultCookie);
 				}
 			}
+			System.out.println(resultMap.toString());
 		}
 		
 		try {
@@ -100,6 +113,12 @@ public class ViewController {
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@RequestMapping(value="/logout", method= RequestMethod.POST)
+	public void logout(HttpServletResponse res, @CookieValue(value="ASID", required=false, defaultValue="") String cookie) {
+		Cookie resultCooke = new Cookie("ASID", "false");
+		res.addCookie(resultCooke);
 	}
 	
 	@RequestMapping(value="/select", method= RequestMethod.POST)

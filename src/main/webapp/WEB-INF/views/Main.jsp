@@ -21,11 +21,23 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-cookies.js"></script>
 <script type="text/javascript">
 	let checkIndex = -1;
 
-	var app = angular.module('app', []);
-	app.controller('appctl', ($scope, $http)=> {
+	var app = angular.module('app', ['ngCookies']);
+	app.controller('appctl', ($scope, $http, $window, $cookies)=> {
+		if(!$cookies.get('ASID')) $window.location.href = '/';
+		
+		$scope.logout = () => {
+			$http({
+				method: 'POST',
+				url: '/logout',
+			}).then((res) => {
+				$window.location.href = '/';
+			});
+		}
+		
 		$scope.comment = () => {
 			$http({
 				method: 'POST',
@@ -75,6 +87,7 @@
 </head>
 <body data-ng-app="app" data-ng-controller="appctl">
 <div class="container">
+<button style="margin-top: 10px;" type="button" class="btn btn-danger" id="logout" data-ng-click="logout()">Logout</button>
 	<h3>웹 문제</h3>
 	<p>
 		위의 버튼 3개만 이용하여 추가, 수정, 삭제 이벤트를 구현 하시오.<br>
