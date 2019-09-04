@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.blackping.shop.controller.HomeController;
@@ -26,9 +27,8 @@ public class DAO implements DAOInterface {
 		System.out.println(map.toString());
 	}
 	
-	public HashMap<String, Object> sql(HashMap<String, Object> paramMap) {
+	public HashMap<String, Object> sql(HashMap<String, Object> paramMap) throws DataAccessException {
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
-		List<Object> resultList;
 		String type = paramMap.get("type").toString();
 		
 		switch(type) {

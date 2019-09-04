@@ -27,7 +27,7 @@
 
 	var app = angular.module('app', ['ngCookies']);
 	app.controller('appctl', ($scope, $http, $window, $cookies)=> {
-		if(!$cookies.get('ASID')) $window.location.href = '/';
+		if($cookies.get('ASID') == undefined) $window.location.href = '/';
 		$scope.dis = true;
 		$scope.logout = () => {
 			$http({
@@ -50,10 +50,12 @@
 		$scope.checked = (item) => {
 			if(item.checked) {
 				checkIndex = item.NO;
+				$scope.id = item.id;
 				$scope.text = item.TXT;
 				$scope.dis = false;
 			} else {
 				checkIndex = -1;
+				$scope.id = "";
 				$scope.text = "";
 				$scope.dis = true;
 			}
@@ -68,11 +70,14 @@
 			$http({
 				"method": 'POST',
 				"url": url,
-				"params" : {NO: checkIndex, TXT: $scope.text},
+				"params" : {NO: checkIndex, TXT: $scope.text, id: $scope.id},
 			})
 			.then((response) => {
 				$scope.text = "";
 				$scope.comment();
+				if(response.data.msg != undefined) {
+					alert(response.data.msg);
+				}
 			});
 		}
 		
@@ -123,6 +128,7 @@
 	    <tr>
 	      <th>선택</th>
 	      <th>번호</th>
+	      <th>작성자</th>
 	      <th>한줄평</th>
 	    </tr>
 	  </thead>
@@ -130,6 +136,7 @@
 		<tr data-ng-repeat="row in data">
 			<td><input type="checkbox" name="checkbox" data-ng-model="row.checked" data-ng-click="checked(row)"> </td>
 			<td>{{ row.NO }}</td>
+			<td>{{ row.id }}</td>
 			<td>{{ row.TXT }}</td>
 		</tr>
 	  </tbody>

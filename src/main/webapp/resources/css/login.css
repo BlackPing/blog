@@ -1,4 +1,5 @@
 * { margin: 0px; padding: 0px; }
+body > * { all: unset; }
 .none { display: none; }
 
 .button-green { background: rgb(28, 184, 65); }

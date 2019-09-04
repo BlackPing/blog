@@ -12,7 +12,7 @@
 		<script type="text/javascript">
 			let app = angular.module('app', ['ngCookies']);
 			app.controller('appctl', ($scope, $http, $window, $cookies) => {
-				if($cookies.get('ASID')) $window.location.href = '/board';
+				if($cookies.get('ASID') != undefined) $window.location.href = '/board';
 				$scope.login = () => {
 					$http({method: "POST", url: "/login", params: {id: $scope.id, pw: $scope.pw}}).then((res) => {
 						$scope.node = res.data;
