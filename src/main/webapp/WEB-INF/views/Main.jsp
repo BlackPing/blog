@@ -28,7 +28,7 @@
 	var app = angular.module('app', ['ngCookies']);
 	app.controller('appctl', ($scope, $http, $window, $cookies)=> {
 		if(!$cookies.get('ASID')) $window.location.href = '/';
-		
+		$scope.dis = true;
 		$scope.logout = () => {
 			$http({
 				method: 'POST',
@@ -48,18 +48,14 @@
 		}
 
 		$scope.checked = (item) => {
-			var update = angular.element(document.querySelector('#update'));
-			var del = angular.element(document.querySelector('#delete'));
 			if(item.checked) {
 				checkIndex = item.NO;
 				$scope.text = item.TXT;
-				update.removeClass('disabled');
-				del.removeClass('disabled');
+				$scope.dis = false;
 			} else {
 				checkIndex = -1;
 				$scope.text = "";
-				update.addClass('disabled');
-				del.addClass('disabled');
+				$scope.dis = true;
 			}
 			angular.forEach($scope.data, (data) => {
 				if(data.NO != item.NO) {
@@ -113,10 +109,10 @@
 	    	<button type="button" class="btn btn-primary" id="insert" data-ng-click="crud('/insert')">추가</button>
 	    </div>
 	    <div class="col-xs-1">
-	    	<button type="button" class="btn btn-success disabled" id="update" data-ng-click="crud('/update')">수정</button>
+	    	<button type="button" class="btn btn-success" id="update" data-ng-class="{disabled: dis}" data-ng-click="crud('/update')">수정</button>
 	    </div>
 	    <div class="col-xs-1">
-	    	<button type="button" class="btn btn-danger disabled" id="delete" data-ng-click="crud('/delete')">삭제</button>
+	    	<button type="button" class="btn btn-danger" id="delete" data-ng-class="{disabled: dis}" data-ng-click="crud('/delete')">삭제</button>
 	    </div>
 	  </div>
 	</form>
