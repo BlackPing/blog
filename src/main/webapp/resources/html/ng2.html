@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
+	
+	
+	<script>
+		var app = angular.module('app', ['ngRoute']);
+		app.config(['$routeProvider', '$compileProvider', ($routeProvider) => {
+			/* 
+			router 화면 전환용
+			when = switch case
+			otherwise default
+			*/
+			$routeProvider.when("/a/:param", {template : "<h1>{{param}} 화면</h1>", controller: "appCTL1"})
+						  .when("/b", {template : "<h1>{{txt}} 화면</h1>", controller: "appCTL2"})
+						  .when("/c/:param", {template : (root) => {
+							  var html = "";
+							  var data = {"A":"1", "B":"2", "C":"3"};
+							  html = "<h1> " + data[root.param] + " 화면</h1>";
+							  return html;
+							  }, controller: "appCTL3"})
+						  .otherwise({redirectTo: "/b"});
+		}]);
+		app.controller('appCTL1', function($scope, $routeParams) {
+			console.log("appCTL1", $routeParams.param);
+		}).controller('appCTL2', function($scope, $rootScope){
+			$rootScope.test = "바뀌냐";
+			console.log("appCTL2");
+		}).controller('appCTL3', function($scope){
+			console.log("appCTL3");
+		})
+		
+		app.directive('aBcD', ($compile) => {
+			// 이름 JS(aBcD) HTML(a-bc-d)
+			var linked = (scope, element, atttrs) => {
+				scope.$watch('data', () => {
+					var html = "<h1>{{data.input}}</h1><h2 data-ng-show='data.check'>{{data.input}}</h2><h3>{{test}}</h3>";
+					element.html(html);
+					$compile(element.contents())(scope);
+				});
+			}
+			
+			return {
+				restrict : "A",
+				link : linked
+				// template : "<h1>directive 화면</h1>"
+			};
+		});
+	</script>
+</head>
+<body data-ng-app="app">
+	
+	<input type="text" data-ng-model="data.input">
+	<input type="checkbox" data-ng-model="data.check">
+	<div data-a-bc-d></div>
+	<div data-ng-view></div>
+</body>
+</html>
