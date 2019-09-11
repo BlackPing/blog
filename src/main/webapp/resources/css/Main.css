@@ -1,0 +1,3 @@
+.contain { float: left; margin-left: 400px; }
+.document { background-color: green; width: 1000px; height: 1000px; }
+.category { float: right; width: 300px; }
