@@ -1,6 +1,5 @@
 package com.blackping.shop.controller;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -18,25 +17,8 @@ public class LoginController {
 		return "login";
 	}
 	
-	@RequestMapping(value="/login/powerinterceptor", method=RequestMethod.POST)
-	public String powerInterceptor(HttpSession session, HttpServletRequest req) {
-		System.out.println("test");
-		String adminCodeCheck = "kingsping!@";
-		String adminCode = req.getParameter("adminCode");
-		try {
-			if(adminCode != null && adminCodeCheck.equals(adminCode)) {
-				session.setMaxInactiveInterval(3600);
-				session.setAttribute("power", true);
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-		return "redirect:/";
-	}
-	
-	@RequestMapping(value="/exception", method= RequestMethod.POST)
+	@RequestMapping(value="/exception")
 	public String denied() {
-		return "blog/denied";
+		return "exception/exception";
 	}
 }

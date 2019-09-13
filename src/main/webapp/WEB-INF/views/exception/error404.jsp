@@ -4,9 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>접근 불가</title>
+<title>요청하신 페이지는 찾을 수 없습니다.</title>
 </head>
 <body>
-권한이 없습니다.
+	없는 페이지 입니다.
 </body>
 </html>

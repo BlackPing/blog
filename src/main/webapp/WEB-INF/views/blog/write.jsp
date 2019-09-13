@@ -20,6 +20,7 @@
 	function start() {
 		CKEDITOR.replace( 'editor1', {
 				resize_enabled: false,
+				enterMode : CKEDITOR.ENTER_BR,
 				width: 1000,
 				height: 800
 			} );
@@ -36,26 +37,16 @@
 	    </div>
 	  </div>
 	</header>
-	<div class="container">
+	<div class="contain">
 		<form>
 			<input type="text" name="title">
 			<select>
-				<option value="1">
-				<option value="2">
-				<option value="3">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
 			</select>
 			<textarea name="text" id="editor1" rows="10" cols="80"></textarea>
 		</form>
-		<div class="document"></div>
-	</div>
-	<div class="category">
-		<form action="/" method="get">
-			<input type="text" name="search">
-			<input type="submit" value="검색">
-		</form>
-		<p>전체 게시글</p>
-		<p>테스트</p>
-		<p>인간</p>
 	</div>
 	<footer class="bg-dark text-white">
 		<div class="text-center">

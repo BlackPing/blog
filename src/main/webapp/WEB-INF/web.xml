@@ -36,6 +36,32 @@
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
+	
+	<!-- Session Default Time -->
+	<session-config>
+		<session-timeout>1800</session-timeout>
+	</session-config>
+
+	<!-- error page -->
+	<error-page>
+		<error-code>403</error-code>
+		<location>/WEB-INF/views/exception/error403.jsp</location>
+	</error-page>
+	
+	<error-page>
+		<error-code>405</error-code>
+		<location>/WEB-INF/views/exception/error403.jsp</location>
+	</error-page>
+	
+	<error-page>
+		<error-code>404</error-code>
+		<location>/WEB-INF/views/exception/error404.jsp</location>
+	</error-page>
+
+	<error-page>
+		<error-code>500</error-code>
+		<location>/WEB-INF/views/exception/error500.jsp</location>
+	</error-page>
 
 	<!-- Encoding -->
 	<filter>

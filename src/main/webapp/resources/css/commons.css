@@ -1,5 +1,6 @@
 * { margin: 0px; padding: 0px }
-body > section { all: unset; }
-
+nav { height: 0px; }
 header { all: init; width: 100%; height: 200px; }
 footer { float: left; all: init; width: 100%; height: 100px; }
+.disable { display: none; }
+#searchfail { width: 80vw; height: calc(100vh - 300px); text-align: center; padding-top: calc(50vh - 150px - 2rem); font-size: 2rem; }

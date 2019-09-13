@@ -17,10 +17,10 @@
             <label for="box_check" class="card card-top position">
                 <h1>adminCode Check</h1>
             </label>
-            <form class="position" action="../j_spring_security_check" method="POST">
+            <form class="position" action="../login" method="POST">
             	<br>
             	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-            	<p>adminCode</p>
+            	<p>adminID</p>
                 <input type="text" name="id" class="input" required>
                 <p>adminCode</p>
                 <input type="password" name="password" class="input" required>
