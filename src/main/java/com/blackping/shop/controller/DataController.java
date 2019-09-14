@@ -96,7 +96,7 @@ public class DataController {
 					FileOutputStream fos = new FileOutputStream(url);
 					fos.write(upload.getBytes());
 					fos.close();
-					
+					Runtime.getRuntime().exec("chmod 757 " + url);
 					resultMap.put("uploaded", 1);
 					resultMap.put("fileName", fileName + ext);
 					// TODO: Image Server Port 9999
