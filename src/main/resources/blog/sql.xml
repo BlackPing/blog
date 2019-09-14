@@ -5,8 +5,23 @@
 <mapper namespace="blog">
 	<select id="board" parameterType="String" resultType="hashmap">
 		SELECT `TITLE`, `TEXT`, `HISTORY`, DATE_FORMAT(`TIME`, '%Y-%m-%d %H:%i') as `TIME`, `CATEGORY_NAME`, `TAG` FROM board
-		<if test='value != null'>
-			WHERE `TITLE` LIKE '%${value}%'
+		<if test='value == null'>
+			WHERE `DELYN` = 'N'
 		</if>
+		<if test='value != null'>
+			WHERE `TITLE` LIKE '%${value}%' AND `DELYN` = 'N'
+		</if>
+	</select>
+	
+	<select id="category" resultType="hashmap">
+		SELECT cg.`NAME`, (SELECT COUNT(*) FROM board WHERE CATEGORY_NAME = cg.`NAME`) as `CNT`, cg.`TYPE` FROM category as cg ORDER BY cg.`NO` ASC
+	</select>
+	
+	<select id="category_board" parameterType="String" resultType="hashmap">
+		SELECT `TITLE`, `TEXT`, `HISTORY`, DATE_FORMAT(`TIME`, '%Y-%m-%d %H:%i') as `TIME`, `CATEGORY_NAME`, `TAG` FROM board as bd INNER JOIN category as cg ON cg.NAME = bd.CATEGORY_NAME WHERE bd.CATEGORY_NAME = '${value}' AND bd.DELYN = 'N'
+	</select>
+	
+	<select id="category_count" parameterType="String" resultType="Integer">
+		SELECT COUNT(*) as `CNT` FROM board as bd INNER JOIN category as cg ON cg.NAME = bd.CATEGORY_NAME WHERE bd.CATEGORY_NAME = '${value}'
 	</select>
 </mapper>

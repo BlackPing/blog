@@ -24,17 +24,18 @@
 <script type="text/javascript">
 </script>
 </head>
-<body data-ng-app="app">
+<body>
 	<nav>
 		<input type="checkbox" id="category" class="disable">
+		<div class="document_pop"><label for="category" class="document_pop_label"></label></div>
 		<label for="category"><div class="cate_btn">CATEGORY</div></label>
 		<div class="category">
 			<div>
 				<form class="search">
-					<label for="category"><img src="/res/icon/search.png" class="icon"></label>
+					<img src="/res/icon/search.png" class="icon">
 					<input type="text" name="search">
 				</form>
-				<label for="category"><img src="/res/icon/close-cross.png" class="icon cancel"></label>
+				<label for="category" style="margin-left: 35px;"><img src="/res/icon/close-cross.png" class="icon cancel"></label>
 			</div>
 			<form action="/" method="get">
 				<% if(request.getSession().getAttribute("SPRING_SECURITY_CONTEXT") != null) { %>
@@ -43,10 +44,18 @@
 					<button type="submit" formaction="/logout" formmethod="post" class="btn btn-danger">로그아웃</button>
 				<% } %>
 			</form>
-			<div style="clear: both;">
-				<p>전체 게시글</p>
-				<p>테스트</p>
-				<p>인간</p>
+			<div class="category_select">
+				<c:if test="${not empty catedata.result}">
+					<div><a href="/" class="category_all">전체 게시글</a></div>
+				<c:forEach var="item" items="${catedata.result}" varStatus="status">
+					<c:if test="${'N' eq item.TYPE}">
+						<div class="category_directory"><a href="/category/${item.NAME}">${item.NAME} <span class="category_count">(${item.CNT})</span></a></div>
+					</c:if>
+					<c:if test="${'Y' eq item.TYPE}">
+						<div class="category_directory_mark">${item.NAME}</div>
+					</c:if>
+				</c:forEach>
+				</c:if>
 			</div>
 		</div>
 	</nav>

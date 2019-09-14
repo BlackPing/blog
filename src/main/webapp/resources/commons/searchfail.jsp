@@ -7,7 +7,8 @@
 </head>
 <body>
 	<div id="searchfail">
-		'${param.search}'에 대한 검색 결과가 없습니다.
+		<%-- '${param.search}'에 대한 검색 결과가 없습니다. --%>
+		요청하신 정보가 없습니다.
 	</div>
 </body>
 </html>

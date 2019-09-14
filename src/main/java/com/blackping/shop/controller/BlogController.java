@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -47,7 +48,21 @@ public class BlogController {
 //		}
 		
 		HashMap<String, Object> data = bs.Select(req.getParameter("search"));
+		HashMap<String, Object> catedata = bs.CateList();
+		
 		m.addAttribute("data", data);
+		m.addAttribute("catedata", catedata);
+		System.out.println(catedata.toString());
+		return "blog/index";
+	}
+	
+	@RequestMapping(value="/category/{key}", method=RequestMethod.GET)
+	public String category(@PathVariable String key, HttpServletRequest req, Model m) {
+		HashMap<String, Object> data = bs.CateSelect(key);
+		HashMap<String, Object> catedata = bs.CateList();
+		m.addAttribute("data", data);
+		m.addAttribute("catedata", catedata);
+		System.out.println(data.toString());
 		return "blog/index";
 	}
 	
