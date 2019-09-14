@@ -22,6 +22,16 @@
 <script src="/res/js/jquery-3.4.1.min.js"></script>
 <script src="/res/js/Main.js"></script>
 <script type="text/javascript">
+	<%
+		if(request.getAttribute("data") == null) {
+			HashMap<String, Object> dataMap = (HashMap<String, Object>) request.getAttribute("data");
+			if(dataMap.get("msg") == null) {
+	%>
+		alert("<%= dataMap.get("msg").toString()%>");
+	<%
+			}
+		}
+	%>
 </script>
 </head>
 <body>
@@ -75,9 +85,21 @@
 						<div class="document_time">${item.TIME}</div>
 					</div>
 				</div>
+				<div class="document_files"></div>
+				<span class="document_url" onclick="urlCopy(this)">
+					<span>http://blog.blackping.shop/category/${item.CATEGORY_NAME}/${item.CATEGORY_NO}</span>
+					<span class="copy_btn">복사</span>
+					<input class="url bg-dark" type="text" value="http://blog.blackping.shop/category/${item.CATEGORY_NAME}/${item.CATEGORY_NO}">
+				</span>
 				<div class="document_text">
 					${item.TEXT}
 				</div>
+				<div>
+					<div class="document_history" style="display: inline-block;">댓글 ${item.HISTORY}</div>
+					<div class="document_tc" style="display: inline-block;">|</div>
+					<div class="document_history" style="display: inline-block;">조회수 ${item.HISTORY}</div>
+				</div>
+				<div class="document_comment"></div>
 			</div>
 		</c:forEach>
 		</c:if>

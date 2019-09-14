@@ -18,9 +18,11 @@ public class BlogService {
 		
 		try {
 			resultMap.put("result", adi.getData("SL", "blog", "board", search).get("result"));
+			resultMap.put("status", true);
 		} catch(DataAccessException e) {
 			e.printStackTrace();
 			resultMap.put("msg", "네트워크 에러");
+			resultMap.put("status", false);
 		}
 		
 		return resultMap;
@@ -31,9 +33,11 @@ public class BlogService {
 		
 		try {
 			resultMap.put("result", adi.getData("SL", "blog", "category", null).get("result"));
+			resultMap.put("status", true);
 		} catch(DataAccessException e) {
 			e.printStackTrace();
 			resultMap.put("msg", "네트워크 에러");
+			resultMap.put("status", false);
 		}
 		
 		return resultMap;
@@ -44,11 +48,37 @@ public class BlogService {
 		
 		try {
 			resultMap.put("result", adi.getData("SL", "blog", "category_board", category).get("result"));
+			resultMap.put("status", true);
 		} catch(DataAccessException e) {
 			e.printStackTrace();
 			resultMap.put("msg", "네트워크 에러");
+			resultMap.put("status", false);
 		}
 		
 		return resultMap;
+	}
+	
+	public HashMap<String, Object> CateOneSelect(Object category) {
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		
+		try {
+			resultMap.put("result", adi.getData("SL", "blog", "category_one", category).get("result"));
+			resultMap.put("status", true);
+		} catch(DataAccessException e) {
+			e.printStackTrace();
+			resultMap.put("msg", "네트워크 에러");
+			resultMap.put("status", false);
+		}
+		
+		return resultMap;
+	}
+	
+	public void HistoryAdd(HashMap<String, Object> category) {
+		try {
+			category.put("value", Integer.parseInt(adi.getData("SO", "blog", "historyOne", category).get("result").toString()) + 1);
+			adi.getData("UD", "blog", "history", category);
+		} catch(DataAccessException e) {
+			e.printStackTrace();
+		}
 	}
 }

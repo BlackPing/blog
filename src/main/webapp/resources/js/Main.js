@@ -38,6 +38,14 @@ function hasScrolled() {
 	}
 }
 
+function urlCopy(obj) {
+	let urlCopy;
+	urlCopy = obj.getElementsByTagName("input")[0];
+	urlCopy.select();
+	document.execCommand('copy');
+	alert("포스팅 주소가 복사되었습니다.");
+}
+
 //$(document).ready(() => {
 //	$(".cate_btn").on('click', (e)=> {
 //		let object = $(".category");

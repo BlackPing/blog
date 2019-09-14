@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Developer b</title>
+<title>Developer b - exception</title>
 
 <link rel="stylesheet" type="text/css" href="/res/css/commons.css">
 <link rel="stylesheet" type="text/css" href="/res/css/Main.css">

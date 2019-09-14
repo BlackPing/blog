@@ -1,12 +1,15 @@
-.contain { float: left; width: 80vw; margin-left: 10vw; }
 .document { margin: 40px 0px 40px 0px; border: 1px solid rgb(139, 139, 139); box-sizing: border-box;}
 .document .document_tit { padding: 20px; border-bottom: 1px solid rgb(139, 139, 139); box-sizing: border-box; }
 .document .document_title { display: inline-block; font-size: 24px; font-weight: bold; }
 .document .document_tc { display: inline-block; opacity: 0.5; }
 .document .document_category { display: inline-block; font-size: 12px; font-weight: bold; opacity: 0.7; }
-.document .document_text { display: inline-block; padding: 20px 40px 20px 40px; }
-.document .document_time { display: inline-block; padding-top: 10px; float: right; }
-
+.document .document_text { display: inline-block; padding: 40px 40px 20px 40px; }
+.document .document_time { display: inline-block; padding-top: 10px; float: right; font-size: 12px; }
+.document .document_history { padding: 5px; font-size: 12px; }
+.document .document_url { float:right; padding: 5px; font-size: 12px; }
+.document .document_url:hover { cursor: pointer; opacity: 0.7; }
+.document .url { position: absolute; top: 0; left: 0; width: 1px; height: 1px; margin: 0; padding: 0; border: 0; }
+.document .copy_btn { border:1px solid gray; border-radius:3px; padding:0px 2px 1px 2px; color:white; background-color:gray;	 }
 
 .search { float: left; }
 .search > input { all: unset; margin-left: 10px; border-bottom: 1px solid rgb(139, 139, 139); box-sizing: border-box; }

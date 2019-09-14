@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="blog">
 	<select id="board" parameterType="String" resultType="hashmap">
-		SELECT `TITLE`, `TEXT`, `HISTORY`, DATE_FORMAT(`TIME`, '%Y-%m-%d %H:%i') as `TIME`, `CATEGORY_NAME`, `TAG` FROM board
+		SELECT `NO`, `CATEGORY_NO`, `TITLE`, `TEXT`, `HISTORY`, DATE_FORMAT(`TIME`, '%Y-%m-%d %H:%i') as `TIME`, `CATEGORY_NAME`, `TAG` FROM board
 		<if test='value == null'>
 			WHERE `DELYN` = 'N'
 		</if>
@@ -14,14 +14,44 @@
 	</select>
 	
 	<select id="category" resultType="hashmap">
-		SELECT cg.`NAME`, (SELECT COUNT(*) FROM board WHERE CATEGORY_NAME = cg.`NAME`) as `CNT`, cg.`TYPE` FROM category as cg ORDER BY cg.`NO` ASC
+		SELECT cg.`NAME`, (SELECT COUNT(*) FROM board WHERE CATEGORY_NAME = cg.`NAME` AND DELYN='N') as `CNT`, cg.`TYPE` FROM category as cg ORDER BY cg.`NO` ASC
+	</select>
+	
+	<select id="category_one" parameterType="hashmap" resultType="hashmap">
+		SELECT bd.`NO`, bd.`CATEGORY_NO`, bd.`TITLE`, bd.`TEXT`, bd.`HISTORY`, DATE_FORMAT(bd.`TIME`, '%Y-%m-%d %H:%i') as `TIME`, bd.`CATEGORY_NAME`, bd.`TAG`
+		FROM board as bd 
+		INNER JOIN category as cg 
+		ON cg.NAME = bd.CATEGORY_NAME 
+		WHERE bd.CATEGORY_NAME = '${COLUMN}' AND bd.DELYN = 'N' 
+		ORDER BY bd.`NO` ASC
+		LIMIT ${LIMIT}, 1
+	</select>
+	
+	<select id="category_list" resultType="hashmap">
+		SELECT `NAME` FROM category WHERE `TYPE` = 'N'
 	</select>
 	
 	<select id="category_board" parameterType="String" resultType="hashmap">
-		SELECT `TITLE`, `TEXT`, `HISTORY`, DATE_FORMAT(`TIME`, '%Y-%m-%d %H:%i') as `TIME`, `CATEGORY_NAME`, `TAG` FROM board as bd INNER JOIN category as cg ON cg.NAME = bd.CATEGORY_NAME WHERE bd.CATEGORY_NAME = '${value}' AND bd.DELYN = 'N'
+		SELECT bd.`NO`, bd.`CATEGORY_NO`, bd.`TITLE`, bd.`TEXT`, bd.`HISTORY`, DATE_FORMAT(bd.`TIME`, '%Y-%m-%d %H:%i') AS `TIME`, bd.`CATEGORY_NAME`, bd.`TAG` FROM board as bd INNER JOIN category as cg ON cg.NAME = bd.CATEGORY_NAME WHERE bd.CATEGORY_NAME = '${value}' AND bd.DELYN = 'N'
 	</select>
 	
 	<select id="category_count" parameterType="String" resultType="Integer">
 		SELECT COUNT(*) as `CNT` FROM board as bd INNER JOIN category as cg ON cg.NAME = bd.CATEGORY_NAME WHERE bd.CATEGORY_NAME = '${value}'
 	</select>
+	
+	<update id="history" parameterType="hashmap">
+		UPDATE board SET `HISTORY` = ${value} WHERE `CATEGORY_NAME` = #{COLUMN} AND `CATEGORY_NO` = ${CATEGORY_NO}
+	</update>
+	
+	<select id="historyOne" parameterType="hashmap" resultType="String">
+		SELECT `HISTORY` FROM board WHERE `CATEGORY_NAME` = #{COLUMN} AND `CATEGORY_NO` = ${CATEGORY_NO}
+	</select>
+	
+	<select id="category_no" parameterType="com.blackping.shop.bean.WriteBean" resultType="Integer">
+		SELECT COUNT(*) as `CNT` FROM board WHERE `CATEGORY_NAME` = #{category_name}
+	</select>
+	
+	<insert id="insert" parameterType="com.blackping.shop.bean.WriteBean">
+		INSERT INTO board (`TITLE`, `TEXT`, `CATEGORY_NO`, `CATEGORY_NAME`) VALUES (#{title}, #{text}, #{category_no}, #{category_name})
+	</insert>
 </mapper>
