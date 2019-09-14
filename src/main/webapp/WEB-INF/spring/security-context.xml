@@ -15,7 +15,9 @@
 		<intercept-url pattern="/res/**" access="permitAll" />
 		<intercept-url pattern="/download/*" access="permitAll" />
 		<intercept-url pattern="/write" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/update" access="hasRole('ROLE_ADMIN')" />
 		<intercept-url pattern="/delete" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/jenkins" access="hasRole('ROLE_ADMIN')" />
 		
 		<form-login
 			login-processing-url="/login"
