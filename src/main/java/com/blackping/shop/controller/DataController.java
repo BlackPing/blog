@@ -52,7 +52,7 @@ public class DataController {
 	
 	@RequestMapping(value="/write/insert", method=RequestMethod.POST)
 	public String writeinsert(HttpSession session, HttpServletRequest req, Model m, @Valid WriteBean wb, BindingResult bindresult,
-			@RequestParam(value = "files") MultipartFile[] files) {
+			@RequestParam(value = "files") MultipartFile[] files, RedirectAttributes ra) {
 		if(session.getAttribute("SPRING_SECURITY_CONTEXT") == null) return "redirect:/";
 		
 		HashMap<String, Object> resultMap;
@@ -76,7 +76,7 @@ public class DataController {
 		 * service fail { msg="message", status=false}
 		 * success {status=true}
 		 **************************************/
-		m.addAttribute("data", resultMap);
+		ra.addFlashAttribute("error_msg", resultMap);
 		return "redirect:/";
 	}
 	
@@ -132,16 +132,24 @@ public class DataController {
 		HashMap<String, Object> catedata = bs.CateList();
 		m.addAttribute("data", ds.SelectBoard(no));
 		m.addAttribute("catedata", catedata);
-		System.out.println(ds.SelectBoard(no).toString());
 		return "blog/update";
 	}
 	
 	@RequestMapping(value="/renewal", method=RequestMethod.POST)
-	public String renewal(HttpSession session, HttpServletRequest req, WriteBean wb) {
-		if(session.getAttribute("SPRING_SECURITY_CONTEXT") == null) return "redirect:/";
-		
-		System.out.println(wb.toString());
-		
+	public String renewal(HttpSession session, HttpServletRequest req, Model m, @Valid WriteBean wb, BindingResult bindresult,
+			@RequestParam(value = "files") MultipartFile[] files, RedirectAttributes ra) {
+		HashMap<String, Object> resultMap;
+		HashMap<String, Object> errors = BlackUtil.errors(bindresult);
+
+		if(errors.size() > 0) {
+			resultMap = new HashMap<String, Object>();
+			resultMap.put("errors", errors);
+			resultMap.put("status", false);
+		} else {
+			resultMap = ds.Update(wb, files, req.getParameter("file_no"));
+		}
+
+		ra.addFlashAttribute("error_msg", resultMap);
 		return "redirect:/";
 	}
 	

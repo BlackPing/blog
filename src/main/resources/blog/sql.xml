@@ -72,6 +72,7 @@
 	</insert>
 	
 	<delete id="file_delete">
+		DELETE FROM files WHERE BOARD_NO = ${value}
 	</delete>
 	
 	<select id="board_no" parameterType="String" resultType="hashmap">
@@ -80,5 +81,9 @@
 	
 	<update id="board_delete" parameterType="String">
 		UPDATE board SET `DELYN` = 'Y' WHERE `NO` = ${value}
+	</update>
+	
+	<update id="update" parameterType="com.blackping.shop.bean.WriteBean">
+		UPDATE board SET `TITLE` = #{title}, `TEXT` = #{text} WHERE `CATEGORY_NO` = ${category_no} AND `CATEGORY_NAME` = #{category_name}
 	</update>
 </mapper>

@@ -1,3 +1,4 @@
+<%@page import="net.sf.json.JSONObject"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="true" isELIgnored="false" %>
@@ -31,6 +32,13 @@
 <script src="/res/js/jquery-3.4.1.min.js"></script>
 <script src="/res/js/Main.js"></script>
 <script type="text/javascript">
+/* Error_msg */
+	<% if(request.getAttribute("error_msg") != null) { %>
+		var error_msg = <%= JSONObject.fromObject(request.getAttribute("error_msg")).toString() %>;
+		var errors = error_msg.errors;
+		for(var key in errors) alert(errors[key]);
+	<% } %>
+/* Select Msg  */
 	<%
 		if(request.getAttribute("data") == null) {
 			HashMap<String, Object> dataMap = (HashMap<String, Object>) request.getAttribute("data");

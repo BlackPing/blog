@@ -20,6 +20,8 @@
 <script type="text/javascript"></script>
 <script>
 	$(document).ready(() => {
+		$("select[name='category_name'] option[value=${data.result.CATEGORY_NAME}]").attr("selected", true);
+
 		let doc_width = $(document).width();
 		
 		start();
@@ -50,12 +52,13 @@
 <body>
 	<jsp:include page="/resources/commons/header.jsp" flush="true" />
 	<div class="contain">
-		<form id="write" action="/write/insert" method="post" enctype="multipart/form-data">
+		<form id="write" action="/renewal" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="file_no" value="${data.result.NO}">
+			<input type="hidden" name="category_no" value="${data.result.CATEGORY_NO}">
 			<div class="title">
 				<div class="title_name">제목</div> <input type="text" id="title" name="title" value="${data.result.TITLE}" required="required">
 				<div class="category_name">카테고리</div>
 				<select id="category" name="category_name">
-					<option value="" selected disabled hidden>${data.result.CATEGORY_NAME}</option>
 					<c:forEach var="item" items="${catedata.result}" varStatus="status">
 						<c:if test="${'N' eq item.TYPE}">
 							<option value="${item.NAME}">${item.NAME}</option>
