@@ -6,6 +6,15 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="Keywords" content="Web, html, css, javascript, jquery, java, OS, Algorithm, Linux, NetWork, DB, DataBase, AngularJS, Vue, Servlet, Spring, NodeJS, React, C, C++, C#, Hadoop">
+<meta name="Description" content="Beginner Programmer">
+<meta name="robots" content="noindex">
+<meta http-equiv="Subject" content="프로그래밍 기술을 정리하는 블로그" />
+<meta http-equiv="Title" content="Developer b" />
+<meta http-equiv="Author" content="black_ping" />
+<meta http-equiv="Copyright" content="copyright@blackping.shop" />
+<meta http-equiv="Build" content="2019.9.3" />
+
 <title>Developer b</title>
 
 <link rel="stylesheet" type="text/css" href="/res/css/commons.css">
@@ -47,13 +56,13 @@
 				</form>
 				<label for="category" style="margin-left: 35px;"><img src="/res/icon/close-cross.png" class="icon cancel"></label>
 			</div>
+			<% if(request.getSession().getAttribute("SPRING_SECURITY_CONTEXT") != null) { %>
 			<form action="/" method="get">
-				<% if(request.getSession().getAttribute("SPRING_SECURITY_CONTEXT") != null) { %>
 	            	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 					<button type="submit" formaction="/write" formmethod="post" class="btn btn-primary">글쓰기</button>
 					<button type="submit" formaction="/logout" formmethod="post" class="btn btn-danger">로그아웃</button>
-				<% } %>
 			</form>
+			<% } %>
 			<div class="category_select">
 				<c:if test="${not empty catedata.result}">
 					<div><a href="/" class="category_all">전체 게시글</a></div>
@@ -85,17 +94,35 @@
 						<div class="document_time">${item.TIME}</div>
 					</div>
 				</div>
-				<div class="document_files"></div>
 				<span class="document_url" onclick="urlCopy(this)">
 					<span>http://blog.blackping.shop/category/${item.CATEGORY_NAME}/${item.CATEGORY_NO}</span>
 					<span class="copy_btn">복사</span>
 					<input class="url bg-dark" type="text" value="http://blog.blackping.shop/category/${item.CATEGORY_NAME}/${item.CATEGORY_NO}">
 				</span>
+				<c:forEach var="file" items="${data.files}" varStatus="status">
+					<c:if test="${item.NO eq file.BOARD_NO}">
+						<div class="document_files">
+							<div class="document_files_name">
+								
+								<a href="/download?filename=${file.FILENAME}&url=${file.URL}" target="_blank"><img src="/res/icon/cloud-download.png" class="icon"> ${file.FILENAME}</a>
+							</div>
+						</div>
+					</c:if>
+				</c:forEach>
 				<div class="document_text">
 					${item.TEXT}
 				</div>
 				<div>
-					<div class="document_history" style="display: inline-block;">댓글 ${item.HISTORY}</div>
+				<% if(request.getSession().getAttribute("SPRING_SECURITY_CONTEXT") != null) { %>
+				<form action="/" method="get" class="updel">
+		            	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+						<button type="submit" formaction="/update?no=${item.NO}&category=${item.CATEGORY_NAME}" formmethod="post" class="btn btn-outline-success btn-sm update_btn"><span>수정</span></button>
+						<button type="submit" formaction="/delete?no=${item.NO}&category=${item.CATEGORY_NAME}" formmethod="post" class="btn btn-outline-danger btn-sm delete_btn"><span>삭제</span></button>
+				</form>
+				<% } %>
+				</div>
+				<div>
+					<div class="document_history" style="display: inline-block;">댓글 구현 예정</div>
 					<div class="document_tc" style="display: inline-block;">|</div>
 					<div class="document_history" style="display: inline-block;">조회수 ${item.HISTORY}</div>
 				</div>

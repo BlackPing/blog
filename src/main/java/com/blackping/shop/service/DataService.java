@@ -3,6 +3,7 @@ package com.blackping.shop.service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -11,6 +12,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.blackping.shop.bean.FileBean;
 import com.blackping.shop.bean.WriteBean;
 import com.blackping.shop.dao.AutoDAOInterface;
 
@@ -48,6 +50,9 @@ public class DataService {
 						FileOutputStream fos = new FileOutputStream(url);
 						fos.write(files[i].getBytes());
 						fos.close();
+						
+						url = URLEncoder.encode(url);
+						adi.getData("IS", "blog", "file_insert", new FileBean(url, fileName, adi.getData("SO", "blog", "board_count", null).get("result").toString()));
 					}
 				}
 			} catch (IOException e) {
@@ -56,6 +61,33 @@ public class DataService {
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 			resultMap.put("msg", "네트워크 에러");
+			resultMap.put("status", false);
+		}
+		return resultMap;
+	}
+	
+	public HashMap<String, Object> delete(String no) {
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		try {
+			adi.getData("UD", "blog", "board_delete", no);
+			resultMap.put("status", true);
+		} catch(DataAccessException e) {
+			e.printStackTrace();
+			resultMap.put("msg", "네트워크 에러");
+			resultMap.put("status", false);
+		}
+		return resultMap;
+	}
+	
+	public HashMap<String, Object> SelectBoard(String no) {
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		try {
+			resultMap.put("result", adi.getData("SO", "blog", "board_no", no).get("result"));
+			resultMap.put("status", true);
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+			resultMap.put("msg", "네트워크 에러");
+			resultMap.put("status", false);
 		}
 		return resultMap;
 	}

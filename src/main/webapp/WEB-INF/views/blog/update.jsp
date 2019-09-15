@@ -52,9 +52,10 @@
 	<div class="contain">
 		<form id="write" action="/write/insert" method="post" enctype="multipart/form-data">
 			<div class="title">
-				<div class="title_name">제목</div> <input type="text" id="title" name="title" required="required">
+				<div class="title_name">제목</div> <input type="text" id="title" name="title" value="${data.result.TITLE}" required="required">
 				<div class="category_name">카테고리</div>
 				<select id="category" name="category_name">
+					<option value="" selected disabled hidden>${data.result.CATEGORY_NAME}</option>
 					<c:forEach var="item" items="${catedata.result}" varStatus="status">
 						<c:if test="${'N' eq item.TYPE}">
 							<option value="${item.NAME}">${item.NAME}</option>
@@ -63,7 +64,7 @@
 				</select>
 				<button type="submit" style="float: right;" class="btn btn-primary">작성완료</button>
 			</div>
-			<textarea name="text" id="editor1" rows="10" cols="80"></textarea>
+			<textarea name="text" id="editor1" rows="10" cols="80">${data.result.TEXT}</textarea>
 			<div class="files">
 				<input class="btn btn-secondary" type="file" name="files" multiple="multiple" onchange="file_Event(this)">
 			</div>

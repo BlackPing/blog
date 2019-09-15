@@ -32,6 +32,10 @@ public class AutoDAO implements AutoDAOInterface {
 		case "DL":
 			resultMap.put("result", sql.update(namespace + "." + id , bean));
 			break;
+			
+		case "KILL":
+			resultMap.put("result", sql.delete(namespace + "." + id , bean));
+			break;
 		}
 		
 		return resultMap;

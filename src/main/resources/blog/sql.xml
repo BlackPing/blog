@@ -54,4 +54,31 @@
 	<insert id="insert" parameterType="com.blackping.shop.bean.WriteBean">
 		INSERT INTO board (`TITLE`, `TEXT`, `CATEGORY_NO`, `CATEGORY_NAME`) VALUES (#{title}, #{text}, #{category_no}, #{category_name})
 	</insert>
+	
+	<select id="board_count" resultType="Integer">
+		SELECT COUNT(*) AS `CNT` FROM board
+	</select>
+	
+	<select id="file_all" resultType="hashmap">
+		SELECT `URL`, `FILENAME`, `BOARD_NO` FROM files AS fi INNER JOIN board as bd ON fi.BOARD_NO = bd.`NO` WHERE bd.`DELYN` = 'N'
+	</select>
+	
+	<select id="file_select" parameterType="String" resultType="hashmap">
+		SELECT `URL`, `FILENAME`, `BOARD_NO` FROM files AS fi INNER JOIN board as bd ON fi.BOARD_NO = bd.`NO` WHERE bd.`NO` = ${value} AND bd.`DELYN` = 'N'
+	</select>
+	
+	<insert id="file_insert" parameterType="com.blackping.shop.bean.FileBean">
+		INSERT INTO files (`URL`, `FILENAME`, `BOARD_NO`) VALUES (#{url}, #{filename}, ${board_no})
+	</insert>
+	
+	<delete id="file_delete">
+	</delete>
+	
+	<select id="board_no" parameterType="String" resultType="hashmap">
+		SELECT `NO`, `CATEGORY_NO`, `TITLE`, `TEXT`, `HISTORY`, DATE_FORMAT(`TIME`, '%Y-%m-%d %H:%i') as `TIME`, `CATEGORY_NAME`, `TAG` FROM board WHERE `NO` = ${value} AND `DELYN` = 'N'
+	</select>
+	
+	<update id="board_delete" parameterType="String">
+		UPDATE board SET `DELYN` = 'Y' WHERE `NO` = ${value}
+	</update>
 </mapper>

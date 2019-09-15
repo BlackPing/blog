@@ -1,8 +1,13 @@
 package com.blackping.shop.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -11,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.blackping.shop.bean.WriteBean;
 import com.blackping.shop.service.BlogService;
@@ -119,20 +126,57 @@ public class DataController {
 	}
 	
 	@RequestMapping(value="/update", method=RequestMethod.POST)
-	public String update(HttpSession session) {
+	public String update(HttpSession session, HttpServletRequest req, Model m) {
 		if(session.getAttribute("SPRING_SECURITY_CONTEXT") == null) return "redirect:/";
-		return "blog/write";
+		String no = req.getParameter("no");
+		HashMap<String, Object> catedata = bs.CateList();
+		m.addAttribute("data", ds.SelectBoard(no));
+		m.addAttribute("catedata", catedata);
+		System.out.println(ds.SelectBoard(no).toString());
+		return "blog/update";
 	}
 	
-	@RequestMapping(value="/update/update", method=RequestMethod.POST)
-	public String updateupdate(HttpSession session) {
+	@RequestMapping(value="/renewal", method=RequestMethod.POST)
+	public String renewal(HttpSession session, HttpServletRequest req, WriteBean wb) {
 		if(session.getAttribute("SPRING_SECURITY_CONTEXT") == null) return "redirect:/";
-		return "blog/write";
+		
+		System.out.println(wb.toString());
+		
+		return "redirect:/";
 	}
 	
 	@RequestMapping(value="/delete", method=RequestMethod.POST)
-	public String delete(HttpSession session) {
-		if(session.getAttribute("SPRING_SECURITY_CONTEXT") == null) return "redirect:/";
-		return "blog/write";
+	public void delete(HttpSession session, HttpServletRequest req, HttpServletResponse res, RedirectAttributes ra) {
+		try {
+			if(session.getAttribute("SPRING_SECURITY_CONTEXT") == null) res.sendRedirect("/");
+			
+			String no = req.getParameter("no");
+			String category = req.getParameter("category");
+			
+			ra.addFlashAttribute("data", ds.delete(no));
+			res.sendRedirect("/category/" + category);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value="/download", method=RequestMethod.GET)
+	public void download(HttpServletRequest req, HttpServletResponse res) {
+		String fileName = req.getParameter("filename");
+		String url = req.getParameter("url");
+		
+		if(fileName != null && url != null) {
+			try {
+				InputStream input = new FileInputStream(url);
+				OutputStream output = res.getOutputStream();
+				IOUtils.copy(input, output);
+
+				res.setHeader("Content-Disposition", "attachment; fileName=\"" + URLEncoder.encode(fileName,"UTF-8") + "\"");
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

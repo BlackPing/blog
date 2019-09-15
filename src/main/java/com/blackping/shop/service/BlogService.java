@@ -1,6 +1,7 @@
 package com.blackping.shop.service;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -18,6 +19,7 @@ public class BlogService {
 		
 		try {
 			resultMap.put("result", adi.getData("SL", "blog", "board", search).get("result"));
+			resultMap.put("files", adi.getData("SL", "blog", "file_all", null).get("result"));
 			resultMap.put("status", true);
 		} catch(DataAccessException e) {
 			e.printStackTrace();
@@ -48,6 +50,7 @@ public class BlogService {
 		
 		try {
 			resultMap.put("result", adi.getData("SL", "blog", "category_board", category).get("result"));
+			resultMap.put("files", adi.getData("SL", "blog", "file_all", null).get("result"));
 			resultMap.put("status", true);
 		} catch(DataAccessException e) {
 			e.printStackTrace();
@@ -62,7 +65,14 @@ public class BlogService {
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		
 		try {
-			resultMap.put("result", adi.getData("SL", "blog", "category_one", category).get("result"));
+			HashMap<String, Object> paramsMap = adi.getData("SL", "blog", "category_one", category);
+			List<Object> bufferList;
+			HashMap<String, Object> bufferMap;
+			resultMap.put("result", paramsMap.get("result"));
+			
+			bufferList = (List<Object>) paramsMap.get("result");
+			bufferMap = (HashMap<String, Object>) bufferList.get(0);
+			resultMap.put("files", adi.getData("SL", "blog", "file_select", bufferMap.get("NO").toString()).get("result"));
 			resultMap.put("status", true);
 		} catch(DataAccessException e) {
 			e.printStackTrace();
